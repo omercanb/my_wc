@@ -3,6 +3,8 @@
 #include <set>
 #include <locale>
 
+#include "RunOptions.h"
+
 class Arguments
 {
     public:
@@ -23,19 +25,35 @@ int main(int argc, char *argv[])
     }
 
     // Parse args
-    std::set<std::string> argumentsUsed;
-    for (int i = 1; i < argc - 1; i++)
-    {
-        argumentsUsed.emplace(argv[i]);
-    }
     Arguments arguments;
 
-    // Set default args
-    if (argumentsUsed.empty())
+    RunOptions runOptions;
+    for (int i = 1; i < argc - 1; i++)
     {
-        argumentsUsed.emplace(arguments.BYTE);
-        argumentsUsed.emplace(arguments.LINE);
-        argumentsUsed.emplace(arguments.WORD);
+        if (argv[i] == arguments.LINE)
+        {
+            runOptions.addOption(RunOptions::Output::LINE);
+        }
+        else if (argv[i] == arguments.CHAR)
+        {
+            runOptions.addOption(RunOptions::Output::CHAR);
+        }
+        else if (argv[i] == arguments.BYTE)
+        {
+            runOptions.addOption(RunOptions::Output::BYTE);
+        }
+        else if (argv[i] == arguments.WORD)
+        {
+            runOptions.addOption(RunOptions::Output::WORD);
+        }
+    }
+
+    // Set default args
+    if (runOptions.empty())
+    {
+        runOptions.addOption(RunOptions::Output::WORD);
+        runOptions.addOption(RunOptions::Output::LINE);
+        runOptions.addOption(RunOptions::Output::BYTE);
     }
 
 
@@ -56,7 +74,7 @@ int main(int argc, char *argv[])
     int words = 0;
     int lines = 0;
 
-    if (argumentsUsed.contains(arguments.WORD) || argumentsUsed.contains(arguments.LINE))
+    if (runOptions.hasOption(RunOptions::Output::WORD) || runOptions.hasOption(RunOptions::Output::LINE))
     {
         bool readingAWord = false;
         char c;
@@ -99,7 +117,7 @@ int main(int argc, char *argv[])
     // Count chars for UTF8
     // This is supposed to be the same as bytes if there is no multi byte support on the locale
     int chars = 0;
-    if (argumentsUsed.contains(arguments.CHAR))
+    if (runOptions.hasOption(RunOptions::Output::CHAR))
     {
         file.clear();
         file.seekg(0, std::ios::beg);
@@ -115,22 +133,22 @@ int main(int argc, char *argv[])
     }
 
 
-    if (argumentsUsed.contains(arguments.LINE))
+    if (runOptions.hasOption(RunOptions::Output::LINE))
     {
         std::cout << lines << ' ';
     }
 
-    if (argumentsUsed.contains(arguments.WORD))
+    if (runOptions.hasOption(RunOptions::Output::WORD))
     {
         std::cout << words << ' ';
     }
 
-    if (argumentsUsed.contains(arguments.BYTE) && !argumentsUsed.contains(arguments.CHAR))
+    if (runOptions.hasOption(RunOptions::Output::BYTE))
     {
         std::cout << std::filesystem::file_size(filepath) << ' ';
     }
 
-    if (argumentsUsed.contains(arguments.CHAR))
+    if (runOptions.hasOption(RunOptions::Output::CHAR))
     {
         std::cout << chars << ' ';
     }
