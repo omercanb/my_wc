@@ -137,21 +137,21 @@ int main(int argc, char *argv[])
 
 
     // Not needed if not using file
-    std::string filename;
-    size_t lastSeparator = filepath.find_last_of('/');
-
-    if (lastSeparator == std::string::npos)
-    {
-        filename = filepath;
-    }
-    else
-    {
-        filename = filepath.substr(lastSeparator + 1);
-    }
+    // std::string filename;
+    // size_t lastSeparator = filepath.find_last_of('/');
+    //
+    // if (lastSeparator == std::string::npos)
+    // {
+    //     filename = filepath;
+    // }
+    // else
+    // {
+    //     filename = filepath.substr(lastSeparator + 1);
+    // }
 
     if (usingFile)
     {
-        std::cout << filename;
+        std::cout << filepath;
     }
      std::cout << '\n';
     return 0;
