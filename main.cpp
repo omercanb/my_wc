@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     // Parse args
     std::set<std::string> argumentsUsed;
-    for (int i = 1; i < argc; i++)
+    for (int i = 1; i < argc - 1; i++)
     {
         argumentsUsed.emplace(argv[i]);
     }
@@ -146,7 +146,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        filename = filepath.substr(lastSeparator);
+        filename = filepath.substr(lastSeparator + 1);
     }
 
     if (usingFile)
