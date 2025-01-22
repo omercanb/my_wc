@@ -5,4 +5,10 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(my_wc main.cpp
         RunOptions.cpp
-        RunOptions.h)
+        RunOptions.h
+        ArgumentParser.cpp
+        ArgumentParser.h
+        ProgramInput.cpp
+        ProgramInput.h
+        ProgramOutput.cpp
+        ProgramOutput.h)

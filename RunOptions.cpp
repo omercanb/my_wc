@@ -5,7 +5,7 @@
 #include "RunOptions.h"
 
 
-RunOptions& RunOptions::addOption(Output option)
+RunOptions& RunOptions::addOutputOption(Output option)
 {
     if (option == Output::CHAR)
     {
@@ -27,16 +27,20 @@ RunOptions& RunOptions::addOption(Output option)
 }
 
 
-bool RunOptions::hasOption(Output option)
+RunOptions& RunOptions::setInputType(Input option)
+{
+    inputOption = option;
+    return *this;
+}
+
+
+bool RunOptions::hasOutputOption(Output option) const
 {
     return outputOptions.contains(option);
 }
 
 
-bool RunOptions::empty()
+RunOptions::Input RunOptions::getInputType() const
 {
-    return outputOptions.empty();
+    return inputOption;
 }
-
-
-
