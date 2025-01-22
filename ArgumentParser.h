@@ -8,23 +8,21 @@
 #include "RunOptions.h"
 #include "ProgramInput.h"
 
-#include <unistd.h>
-#include <unordered_map>
 #include <string>
-#include <fstream>
 
 
-class ArgumentParser {
+class ArgumentParser
+{
 public:
-    ArgumentParser(const std::vector<std::string> &args);
+    explicit ArgumentParser(const std::vector<std::string> &args);
+
     RunOptions getRunOptions();
-    ProgramInput* getProgramInput();
+
+    ProgramInput *getProgramInput();
 
 private:
     std::vector<std::string> args;
-    RunOptions::Input findInputType();
 };
-
 
 
 #endif //ARGUMENTPARSER_H

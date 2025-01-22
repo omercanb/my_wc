@@ -11,4 +11,5 @@ add_executable(my_wc main.cpp
         ProgramInput.cpp
         ProgramInput.h
         ProgramOutput.cpp
-        ProgramOutput.h)
+        ProgramOutput.h
+)

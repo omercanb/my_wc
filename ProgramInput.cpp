@@ -5,112 +5,117 @@
 #include "ProgramInput.h"
 
 
-OutputStats processInputStream(std::istream& stream, const RunOptions& options)
+OutputStats processInputStream(std::istream &stream, const RunOptions &options)
 {
-    int words = 0;
     int lines = 0;
+    int words = 0;
+    int bytes = 0;
+    int chars = 0;
 
-    if (options.hasOutputOption(RunOptions::Output::WORD) || options.hasOutputOption(RunOptions::Output::LINE))
+    const bool countLines = options.hasOutputOption(RunOptions::LINE);
+    const bool countWords = options.hasOutputOption(RunOptions::WORD);
+    const bool countBytes = options.hasOutputOption(RunOptions::BYTE);
+    const bool countChars = options.hasOutputOption(RunOptions::CHAR);
+
+    bool readingAWord = false;
+    char c;
+
+    while (stream.get(c))
     {
-        bool readingAWord = false;
-        char c;
-
-        bool looping = true;
-        while (looping)
+        if (countBytes)
         {
-            stream.get(c);
-            if (stream.eof())
-            {
-                looping = false;
-                c = ' ';
-            }
+            bytes++;
+        }
 
-            if (c == '\n')
+        if (countChars && (c & 0xc0) != 0x80)
+        // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
+        {
+            chars++;
+        }
+
+        if (countLines && c == '\n')
+        {
+            lines++;
+        }
+
+        if (countWords)
+        {
+            if (std::isspace(c))
             {
-                lines++;
                 if (readingAWord)
                 {
                     words++;
                     readingAWord = false;
                 }
-            }
-            else if (std::isspace(c))
-            {
-                if (readingAWord)
-                {
-                    words++;
-                    readingAWord = false;
-                }
-            }
-            else
+            } else
             {
                 readingAWord = true;
             }
         }
     }
-    // Count chars for UTF8
-    // This is supposed to be the same as bytes if there is no multi byte support on the locale
-    int chars = 0;
-    if (options.hasOutputOption(RunOptions::Output::CHAR) ||options.hasOutputOption(RunOptions::BYTE))
-    {
-        stream.clear();
-        stream.seekg(0, std::ios::beg);
-        char c;
-        while (stream)
-        {
-            stream.get(c);
-            if ((c & 0xc0) != 0x80) // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
-            {
-                chars ++;
-            }
-        }
-    }
 
+    if (countWords && readingAWord)
+    {
+        words++;
+    }
 
     OutputStats stats;
-    if (options.hasOutputOption(RunOptions::Output::WORD))
+    if (options.hasOutputOption(RunOptions::WORD))
     {
-        stats.setWordCount(words);
+        stats.wordCount = words;
     }
-    if (options.hasOutputOption(RunOptions::Output::BYTE))
+    if (options.hasOutputOption(RunOptions::BYTE))
     {
-        stats.setByteCount(chars);
+        stats.byteCount = bytes;
     }
-    if (options.hasOutputOption(RunOptions::Output::CHAR))
+    if (options.hasOutputOption(RunOptions::CHAR))
     {
-        stats.setByteCount(chars);
-        stats.setCharCount(chars);
+        stats.charCount = chars;
     }
-    if (options.hasOutputOption(RunOptions::Output::LINE))
+    if (options.hasOutputOption(RunOptions::LINE))
     {
-        stats.setLineCount(lines);
+        stats.lineCount = lines;
     }
+
     return stats;
 }
 
 
-ProgramOutput SingleFileInput::processInput(const RunOptions &options)
+OutputStats processFile(const std::string& filepath, const RunOptions& options)
 {
     std::ifstream infile(filepath);
-    std::istream& stream = infile;
+    std::istream &stream = infile;
     OutputStats stats = processInputStream(stream, options);
-    stats.filepath = filepath;
-    ProgramOutput output;
-    output.addStats(stats);
-    return output;
+    stats.name = filepath;
+    return stats;
 }
 
 
-ProgramOutput MultipleFileInput::processInput(const RunOptions &options)
+ProgramInput *ProgramInput::setRunOptions(const RunOptions &options)
+{
+    this->options = options;
+    return this;
+}
+
+
+SingleFileInput::SingleFileInput(const std::string &filepath) : filepath(filepath) {}
+
+
+MultipleFileInput::MultipleFileInput(const std::vector<std::string> &filepaths) : filepaths(filepaths) {}
+
+
+ProgramOutput SingleFileInput::processInput()
+{
+    return ProgramOutput().addStats(processFile(filepath, options));
+}
+
+
+ProgramOutput MultipleFileInput::processInput()
 {
     ProgramOutput output;
-    for (auto filepath : filepaths)
+    for (auto filepath: filepaths)
     {
-        std::ifstream infile(filepath);
-        std::istream& stream = infile;
-        OutputStats stats = processInputStream(stream, options);
-        stats.filepath = filepath;
-        output.addStats(stats);
+        output.addStats(processFile(filepath, options));
     }
     return output;
 }

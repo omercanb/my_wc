@@ -11,17 +11,15 @@
 class RunOptions
 {
 public:
-    enum Output {LINE, WORD, BYTE, CHAR};
-    enum Input {FILE, FILES, PIPE, STDIN};
+    enum Output { LINE, WORD, BYTE, CHAR };
+
 private:
     std::set<Output> outputOptions;
-    Input inputOption;
+
 public:
-    RunOptions& addOutputOption(Output option);
-    RunOptions& setInputType(Input option);
+    RunOptions &addOutputOption(Output option);
 
     bool hasOutputOption(Output option) const;
-    Input getInputType() const;
 };
 
 

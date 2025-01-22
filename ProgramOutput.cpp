@@ -6,70 +6,86 @@
 
 #include <iostream>
 
-void ProgramOutput::print(RunOptions options)
+void ProgramOutput::print()
 {
-    for (auto stats : allStats)
-    {
-        if (options.hasOutputOption(RunOptions::Output::LINE))
-        {
-            std::cout << stats.lineCount << ' ';
-        }
-        if (options.hasOutputOption(RunOptions::Output::WORD))
-        {
-            std::cout << stats.wordCount << ' ';
-        }
-        if (options.hasOutputOption(RunOptions::Output::BYTE) || options.hasOutputOption(RunOptions::Output::CHAR))
-        {
-            std::cout << stats.byteCount << ' ';
-        }
-        if (options.getInputType() == RunOptions::Input::FILE || options.getInputType() == RunOptions::Input::FILES)
-        {
-            std::cout << stats.filepath << ' ';
-        }
-        std::cout << std::endl;
 
+    for (int i = allStats.size() - 1; i >= 0; i--)
+    {
+        allStats[i].print();
+    }
+
+    if (allStats.size() > 1)
+    {
+        getTotalStats().print();
     }
 }
 
-OutputStats & ProgramOutput::createNewStats()
-{
-    allStats.emplace_back();
-    return allStats.back();
-}
 
-OutputStats & OutputStats::setWordCount(int count)
-{
-    wordCount = count;
-    return *this;
-}
-
-OutputStats & OutputStats::setLineCount(int count)
-{
-    lineCount = count;
-    return *this;
-}
-
-OutputStats & OutputStats::setCharCount(int count)
-{
-    charCount = count;
-    return *this;
-}
-
-OutputStats & OutputStats::setByteCount(int count)
-{
-    byteCount = count;
-    return *this;
-}
-
-
-OutputStats & OutputStats::setFilePath(std::string filepath)
-{
-    this->filepath = filepath;
-    return *this;
-}
-
-
-void ProgramOutput::addStats(OutputStats stats)
+ProgramOutput &ProgramOutput::addStats(const OutputStats &stats)
 {
     allStats.push_back(stats);
+    return *this;
 }
+
+
+OutputStats OutputStats::combineStats(const OutputStats &other)
+{
+    if (lineCount)
+    {
+        *lineCount += *other.lineCount;
+    }
+    if (wordCount)
+    {
+        *wordCount += *other.wordCount;
+    }
+    if (byteCount)
+    {
+        *byteCount += *other.byteCount;
+    }
+    if (charCount)
+    {
+        *charCount += *other.charCount;
+    }
+    return *this;
+}
+
+
+OutputStats ProgramOutput::getTotalStats()
+{
+    OutputStats total = allStats[0];
+    for (int i = 1; i < allStats.size(); i++)
+    {
+        total = total.combineStats(allStats[i]);
+    }
+    total.name = "total";
+    return total;
+}
+
+
+void OutputStats::print() const
+{
+    std::string format = "%8d ";
+    if (lineCount)
+    {
+        printf(format.c_str(), *lineCount);
+    }
+    if (wordCount)
+    {
+        printf(format.c_str(), *wordCount);
+    }
+    if (byteCount)
+    {
+        printf(format.c_str(), *byteCount);
+    }
+    if (charCount)
+    {
+        printf(format.c_str(), *charCount);
+    }
+    if (name)
+    {
+        std::cout << *name << ' ';
+    }
+    std::cout << std::endl;
+}
+
+

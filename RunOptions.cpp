@@ -5,21 +5,19 @@
 #include "RunOptions.h"
 
 
-RunOptions& RunOptions::addOutputOption(Output option)
+RunOptions &RunOptions::addOutputOption(Output option)
 {
     if (option == Output::CHAR)
     {
         outputOptions.erase(Output::BYTE);
         outputOptions.insert(option);
-    }
-    else if (option == Output::BYTE)
+    } else if (option == Output::BYTE)
     {
         if (!outputOptions.contains(CHAR))
         {
             outputOptions.insert(option);
         }
-    }
-    else
+    } else
     {
         outputOptions.emplace(option);
     }
@@ -27,20 +25,7 @@ RunOptions& RunOptions::addOutputOption(Output option)
 }
 
 
-RunOptions& RunOptions::setInputType(Input option)
-{
-    inputOption = option;
-    return *this;
-}
-
-
 bool RunOptions::hasOutputOption(Output option) const
 {
     return outputOptions.contains(option);
-}
-
-
-RunOptions::Input RunOptions::getInputType() const
-{
-    return inputOption;
 }

@@ -4,36 +4,31 @@
 
 #ifndef PROGRAMOUTPUT_H
 #define PROGRAMOUTPUT_H
+
 #include <string>
+#include <optional>
 
-#include "RunOptions.h"
 
-class OutputStats;
-
-class ProgramOutput {
-    std::vector<OutputStats> allStats;
-public:
-    OutputStats& createNewStats();
-    void addStats(OutputStats stats);
-    void print(RunOptions options);
-};
-
-class OutputStats
+struct OutputStats
 {
-public:
-    int wordCount;
-    int lineCount;
-    int charCount;
-    int byteCount;
-    std::string filepath;
-public:
-    OutputStats& setWordCount(int);
-    OutputStats& setLineCount(int);
-    OutputStats& setCharCount(int);
-    OutputStats& setByteCount(int);
-    OutputStats& setFilePath(std::string);
+    OutputStats combineStats(const OutputStats &other);
+    void print() const;
+    std::optional<int> wordCount;
+    std::optional<int> lineCount;
+    std::optional<int> charCount;
+    std::optional<int> byteCount;
+    std::optional<std::string> name;
 };
 
+class ProgramOutput
+{
+    std::vector<OutputStats> allStats;
+    OutputStats getTotalStats();
+public:
+    ProgramOutput &addStats(const OutputStats &stats);
+
+    void print();
+};
 
 
 #endif //PROGRAMOUTPUT_H
