@@ -22,6 +22,7 @@ public:
 
 private:
     std::vector<std::string> args;
+    std::set<RunOptions::Output> parseFlag(const std::string& flag);
 };
 
 

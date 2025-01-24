@@ -10,29 +10,26 @@
 #include <unordered_map>
 
 
-std::unordered_map<std::string, RunOptions::Output> argumentToEnum =
+std::unordered_map<char, RunOptions::Output> argumentToEnum =
 {
-    {"-l", RunOptions::Output::LINE},
-    {"-w", RunOptions::Output::WORD},
-    {"-c", RunOptions::Output::BYTE},
-    {"-m", RunOptions::Output::CHAR},
-    {"-L", RunOptions::Output::LONGEST}
+    {'l', RunOptions::Output::LINE},
+    {'w', RunOptions::Output::WORD},
+    {'c', RunOptions::Output::BYTE},
+    {'m', RunOptions::Output::CHAR},
+    {'L', RunOptions::Output::LONGEST}
 };
 
 
-std::unordered_map<RunOptions::Output, std::string> enumToArgument =
+std::unordered_map<RunOptions::Output, char> enumToArgument =
 {
-    {RunOptions::Output::LINE, "-l"},
-    {RunOptions::Output::WORD, "-w"},
-    {RunOptions::Output::BYTE, "-c"},
-    {RunOptions::Output::CHAR, "-m"},
-    {RunOptions::Output::LONGEST, "-L"}
+    {RunOptions::Output::LINE, 'l'},
+    {RunOptions::Output::WORD, 'w'},
+    {RunOptions::Output::BYTE, 'c'},
+    {RunOptions::Output::CHAR, 'm'},
+    {RunOptions::Output::LONGEST,'L'}
 };
 
-ArgumentParser::ArgumentParser(const std::vector<std::string> &args)
-{
-    this->args = args;
-}
+ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args) {}
 
 
 RunOptions ArgumentParser::getRunOptions()
@@ -40,17 +37,17 @@ RunOptions ArgumentParser::getRunOptions()
     RunOptions runOptions;
 
     bool runOptionsIsEmpty = true;
+    bool onFlag = false;
     for (int i = 1; i < args.size() - 1; i++)
     {
-        for (int outputOptionIdx = RunOptions::Output::LINE;
-            outputOptionIdx <= RunOptions::Output::LONGEST;
-            outputOptionIdx++)
+        std::string& arg = args[i];
+        if (arg[0] == '-')
         {
-            RunOptions::Output option = static_cast<RunOptions::Output>(outputOptionIdx);
-            if (args[i] == enumToArgument[option])
+            std::set<RunOptions::Output> flags = parseFlag(arg);
+            for (RunOptions::Output flag : flags)
             {
+                runOptions.addOutputOption(flag);
                 runOptionsIsEmpty = false;
-                runOptions.addOutputOption(option);
             }
         }
     }
@@ -62,6 +59,21 @@ RunOptions ArgumentParser::getRunOptions()
         runOptions.addOutputOption(RunOptions::BYTE);
     }
     return runOptions;
+}
+
+
+std::set<RunOptions::Output> ArgumentParser::parseFlag(const std::string &flag)
+{
+    std::set<RunOptions::Output> flags;
+    for (char c : flag)
+    {
+        if (c == '-')
+        {
+            continue;
+        }
+        flags.insert(argumentToEnum[c]);
+    }
+    return flags;
 }
 
 
