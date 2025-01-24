@@ -81,6 +81,10 @@ void OutputStats::print() const
     {
         printf(format.c_str(), *charCount);
     }
+    if (longestLineLength)
+    {
+        printf(format.c_str(), *longestLineLength);
+    }
     if (name)
     {
         std::cout << *name << ' ';

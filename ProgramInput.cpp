@@ -17,10 +17,14 @@ OutputStats processInputStream(std::istream &stream, const RunOptions &options)
     int bytes = 0;
     int chars = 0;
 
-    const bool countLines = options.hasOutputOption(RunOptions::LINE);
-    const bool countWords = options.hasOutputOption(RunOptions::WORD);
-    const bool countBytes = options.hasOutputOption(RunOptions::BYTE);
-    const bool countChars = options.hasOutputOption(RunOptions::CHAR);
+    int longestLineLength = 0;
+    int currentLineLength = 0;
+
+    const bool countLines = options.hasOutputOption(RunOptions::Output::LINE);
+    const bool countWords = options.hasOutputOption(RunOptions::Output::WORD);
+    const bool countBytes = options.hasOutputOption(RunOptions::Output::BYTE);
+    const bool countChars = options.hasOutputOption(RunOptions::Output::CHAR);
+    const bool findLongestLine = options.hasOutputOption(RunOptions::Output::LONGEST);
 
     bool readingAWord = false;
     char c;
@@ -36,12 +40,32 @@ OutputStats processInputStream(std::istream &stream, const RunOptions &options)
         // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
         {
             chars++;
+
+            if (findLongestLine)
+            {
+                currentLineLength++;
+            }
         }
 
-        if (countLines && c == '\n')
+        if (findLongestLine && !countChars)
+        {
+            currentLineLength++;
+        }
+
+
+        if (c == '\n')
         {
             lines++;
+
+            int realLength = currentLineLength - 1;
+            if (findLongestLine && (realLength > longestLineLength))
+            {
+                longestLineLength = realLength;
+            }
+
+            currentLineLength = 0;
         }
+
 
         if (countWords)
         {
@@ -80,6 +104,10 @@ OutputStats processInputStream(std::istream &stream, const RunOptions &options)
     if (options.hasOutputOption(RunOptions::LINE))
     {
         stats.lineCount = lines;
+    }
+    if (options.hasOutputOption(RunOptions::LONGEST))
+    {
+        stats.longestLineLength = longestLineLength;
     }
 
     return stats;

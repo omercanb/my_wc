@@ -5,6 +5,7 @@
 #include "ArgumentParser.h"
 
 #include <fstream>
+#include <iostream>
 #include <unistd.h>
 #include <unordered_map>
 
@@ -14,7 +15,8 @@ std::unordered_map<std::string, RunOptions::Output> argumentToEnum =
     {"-l", RunOptions::Output::LINE},
     {"-w", RunOptions::Output::WORD},
     {"-c", RunOptions::Output::BYTE},
-    {"-m", RunOptions::Output::CHAR}
+    {"-m", RunOptions::Output::CHAR},
+    {"-L", RunOptions::Output::LONGEST}
 };
 
 
@@ -23,7 +25,8 @@ std::unordered_map<RunOptions::Output, std::string> enumToArgument =
     {RunOptions::Output::LINE, "-l"},
     {RunOptions::Output::WORD, "-w"},
     {RunOptions::Output::BYTE, "-c"},
-    {RunOptions::Output::CHAR, "-m"}
+    {RunOptions::Output::CHAR, "-m"},
+    {RunOptions::Output::LONGEST, "-L"}
 };
 
 ArgumentParser::ArgumentParser(const std::vector<std::string> &args)
@@ -36,13 +39,12 @@ RunOptions ArgumentParser::getRunOptions()
 {
     RunOptions runOptions;
 
-    // runOptions.setInputType(findInputType());
-
     bool runOptionsIsEmpty = true;
     for (int i = 1; i < args.size() - 1; i++)
     {
-        for (int outputOptionIdx = RunOptions::Output::LINE; outputOptionIdx != RunOptions::Output::CHAR;
-             outputOptionIdx++)
+        for (int outputOptionIdx = RunOptions::Output::LINE;
+            outputOptionIdx <= RunOptions::Output::LONGEST;
+            outputOptionIdx++)
         {
             RunOptions::Output option = static_cast<RunOptions::Output>(outputOptionIdx);
             if (args[i] == enumToArgument[option])
@@ -73,8 +75,8 @@ ProgramInput *ArgumentParser::getProgramInput()
 
     if (!isatty(fileno(stdin)))
     {
-        return new StdinInput(options);
         type = PIPE;
+        return new StdinInput(options);
     }
 
     std::vector<std::string> files;
@@ -107,5 +109,6 @@ ProgramInput *ArgumentParser::getProgramInput()
         return (new MultipleFileInput(options, files));
     }
 
+    type = STDIN;
     return new StdinInput(options);
 }

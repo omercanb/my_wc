@@ -17,6 +17,7 @@ struct OutputStats
     std::optional<int> lineCount;
     std::optional<int> charCount;
     std::optional<int> byteCount;
+    std::optional<int> longestLineLength;
     std::optional<std::string> name;
 };
 

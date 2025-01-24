@@ -11,7 +11,7 @@
 class RunOptions
 {
 public:
-    enum Output { LINE, WORD, BYTE, CHAR };
+    enum Output { LINE, WORD, BYTE, CHAR, LONGEST};
 
 private:
     std::set<Output> outputOptions;
