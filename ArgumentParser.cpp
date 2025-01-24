@@ -69,8 +69,11 @@ ProgramInput *ArgumentParser::getProgramInput()
 
     InputType type = STDIN;
 
+    RunOptions options = getRunOptions();
+
     if (!isatty(fileno(stdin)))
     {
+        return new StdinInput(options);
         type = PIPE;
     }
 
@@ -98,43 +101,11 @@ ProgramInput *ArgumentParser::getProgramInput()
 
     if (files.size() == 1)
     {
-        return (new SingleFileInput(files[0]))->setRunOptions(getRunOptions());
+        return (new SingleFileInput(options, files[0]));
     } else if (files.size() > 1)
     {
-        return (new MultipleFileInput(files))->setRunOptions(getRunOptions());
+        return (new MultipleFileInput(options, files));
     }
 
-    return nullptr;
+    return new StdinInput(options);
 }
-
-//
-// RunOptions::Input ArgumentParser::findInputType() const
-// {
-//     RunOptions::Input type = RunOptions::Input::STDIN;
-//
-//     if (!isatty(fileno(stdin)))
-//     {
-//         type = RunOptions::Input::PIPE;
-//     }
-//
-//     for (int i = args.size() - 1; i > 0; i--)
-//     {
-//         std::ifstream file(args[i]);
-//         if (file.is_open())
-//         {
-//             if (type == RunOptions::Input::FILE)
-//             {
-//                 type = RunOptions::Input::FILES;
-//                 break;
-//             } else
-//             {
-//                 type = RunOptions::Input::FILE;
-//             }
-//             file.close();
-//         } else
-//         {
-//             break;
-//         }
-//     }
-//     return type;
-// }

@@ -2,6 +2,11 @@
 // Created by Ömer Can Baykara on 21.01.2025.
 //
 
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+
 #include "ProgramInput.h"
 
 
@@ -98,16 +103,23 @@ ProgramInput *ProgramInput::setRunOptions(const RunOptions &options)
 }
 
 
-SingleFileInput::SingleFileInput(const std::string &filepath) : filepath(filepath) {}
+ProgramInput::ProgramInput(const RunOptions &options) : options(options) {}
 
 
-MultipleFileInput::MultipleFileInput(const std::vector<std::string> &filepaths) : filepaths(filepaths) {}
+SingleFileInput::SingleFileInput(const RunOptions& options, const std::string &filepath) :
+ProgramInput(options), filepath(filepath) {}
+
+
+MultipleFileInput::MultipleFileInput(const RunOptions& options, const std::vector<std::string> &filepaths) :
+ProgramInput(options), filepaths(filepaths) {}
 
 
 ProgramOutput SingleFileInput::processInput()
 {
     return ProgramOutput().addStats(processFile(filepath, options));
 }
+
+StdinInput::StdinInput(const RunOptions& options) : ProgramInput(options){}
 
 
 ProgramOutput MultipleFileInput::processInput()
@@ -118,4 +130,16 @@ ProgramOutput MultipleFileInput::processInput()
         output.addStats(processFile(filepath, options));
     }
     return output;
+}
+
+
+ProgramOutput StdinInput::processInput()
+{
+    std::string line;
+    std::stringstream s;
+    while (getline(std::cin, line))
+    {
+        s << line << '\n';
+    }
+    return ProgramOutput().addStats(processInputStream(s, options));
 }
