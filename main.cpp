@@ -1,11 +1,11 @@
 #include <iostream>
 #include <fstream>
-#include <locale>
 #include <vector>
 
 #include "ArgumentParser.h"
 #include "Counter.h"
 #include "Flags.h"
+#include "InputSource.h"
 
 
 int main(int argc, char *argv[])
@@ -25,17 +25,28 @@ int main(int argc, char *argv[])
 
     std::vector<std::string> filepaths = parser.getFilepaths();
 
-    
-
-    std::ifstream file(filepaths.back());
+    InputSource* input;
+    if (filepaths.size() == 0)
+    {
+        input = new StdinInput();
+    }
+    else if (filepaths.size() == 1)
+    {
+        input = new FileInput(filepaths.at(0));
+    }
+    else
+    {
+        input = new MultipleFileInput(filepaths);
+    }
 
     Counter counter(flags);
-    counter.countStream(file);
-    auto items = counter.getItems();
+    while(input->hasNextStream())
+    {
+        counter.countStream(input->getNextStream());
+        input->addSourceInfo(counter.getNewestItem());
+    }
 
-
-
-
+    delete input;
 
     std::cout << "Test";
     // std::vector<std::string> args(argv, argv + argc);

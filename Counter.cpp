@@ -60,12 +60,20 @@ void CountedItem::add(const CountedItem &other)
 }
 
 
-Counter::Counter(const std::set<char>& flags) : flags(flags), total(flags) {}
+Counter::Counter(const std::set<char>& flags) : flags(flags), total(flags)
+{
+    total.name = "total";
+}
 
 
 std::vector<CountedItem> Counter::getItems()
 {
     return items;
+}
+
+CountedItem & Counter::getNewestItem()
+{
+    return items.back();
 }
 
 void Counter::countStream(std::istream &textStream)

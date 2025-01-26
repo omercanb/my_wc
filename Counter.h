@@ -27,6 +27,8 @@ public:
 
     void countStream(std::istream &textStream);
 
+    CountedItem &getNewestItem();
+
 private:
     std::set<char> flags;
 
