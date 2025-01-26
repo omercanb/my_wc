@@ -12,6 +12,8 @@ namespace Flags
     constexpr char BYTE = 'c';
     constexpr char CHAR = 'm';
     constexpr char LONGEST = 'L';
+
+    auto flags = {LINE, WORD, BYTE, CHAR, LONGEST};
 }
 
 
