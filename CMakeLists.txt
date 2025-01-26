@@ -8,8 +8,6 @@ add_executable(my_wc main.cpp
         RunOptions.h
         ArgumentParser.cpp
         ArgumentParser.h
-        ProgramInput.cpp
-        ProgramInput.h
         ProgramOutput.cpp
         ProgramOutput.h
         Counter.cpp
