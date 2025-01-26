@@ -6,7 +6,6 @@
 #include "ArgumentParser.h"
 #include "Counter.h"
 #include "Flags.h"
-#include "InputSource.h"
 #include "Printer.h"
 
 int main(int argc, char *argv[])

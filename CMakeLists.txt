@@ -9,8 +9,6 @@ add_executable(my_wc main.cpp
         Counter.cpp
         Counter.h
         Flags.h
-        InputSource.cpp
-        InputSource.h
         Printer.cpp
         Printer.h
 )
