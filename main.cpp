@@ -41,7 +41,6 @@ int main(int argc, char *argv[])
     }
     else
     {
-
         for (const std::string &filepath : filepaths)
         {
             std::ifstream fileStream(filepath);

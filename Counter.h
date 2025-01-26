@@ -38,6 +38,8 @@ private:
     std::vector<CountedItem> items;
 
     CountedItem total;
+
+    void countLine(const std::string& line, CountedItem& item);
 };
 
 

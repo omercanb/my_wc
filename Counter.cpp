@@ -5,11 +5,9 @@
 
 #include <istream>
 #include <algorithm>
-
-#include "Counter.h"
-
 #include <sstream>
 
+#include "Counter.h"
 #include "Flags.h"
 
 
@@ -17,7 +15,7 @@ void CountedItem::add(const CountedItem &other)
 {
     for (auto &[key, value]: counts)
     {
-        counts[key] += other.counts.at(key);
+        value += other.counts.at(key);
     }
 }
 
@@ -49,35 +47,10 @@ void Counter::countStream(std::istream &stream)
     items.push_back(CountedItem());
     CountedItem &item = items.back();
 
-    bool readingAWord = false;
-
     std::string line;
-
     while (std::getline(stream, line))
     {
-        item.counts[Flags::LINE]++;
-
-        int lineLength;
-        if (flags.contains(Flags::CHAR))
-        {
-            lineLength = std::count_if(line.begin(), line.end(),
-            [](char c) {return (c & 0xc0) != 0x80;}); // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
-            item.counts[Flags::CHAR] += lineLength + 1;
-        }
-        else
-        {
-            lineLength = line.size();
-            item.counts[Flags::BYTE] += lineLength + 1;
-        }
-
-        if (lineLength > item.counts[Flags::LONGEST])
-        {
-            item.counts[Flags::LONGEST] = lineLength;
-        }
-
-        std::istringstream lineStream(line);
-        const auto wordCount = std::distance(std::istream_iterator<std::string>(lineStream), {});
-        item.counts[Flags::WORD] += wordCount;
+        countLine(line, item);
     }
 
     std::erase_if(item.counts, [&](const auto &pair) {
@@ -85,4 +58,31 @@ void Counter::countStream(std::istream &stream)
     });
 
     total.add(item);
+}
+
+void Counter::countLine(const std::string &line, CountedItem &item)
+{
+    item.counts[Flags::LINE]++;
+
+    int lineLength;
+    if (flags.contains(Flags::CHAR))
+    {
+        lineLength = std::count_if(line.begin(), line.end(),
+        [](char c) {return (c & 0xc0) != 0x80;}); // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
+        item.counts[Flags::CHAR] += lineLength + 1;
+    }
+    else
+    {
+        lineLength = line.size();
+        item.counts[Flags::BYTE] += lineLength + 1;
+    }
+
+    if (lineLength > item.counts[Flags::LONGEST])
+    {
+        item.counts[Flags::LONGEST] = lineLength;
+    }
+
+    std::istringstream lineStream(line);
+    const auto wordCount = std::distance(std::istream_iterator<std::string>(lineStream), {});
+    item.counts[Flags::WORD] += wordCount;
 }
