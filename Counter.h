@@ -11,11 +11,8 @@
 #include <vector>
 #include <string>
 
-class CountedItem
+struct  CountedItem
 {
-public:
-    CountedItem(const std::set<char> &flags);
-
     std::map<char, int> counts;
     std::optional<std::string> name;
 

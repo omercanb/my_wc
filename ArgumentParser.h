@@ -16,7 +16,7 @@ public:
 
     void addFlag(char flag);
 
-    bool hasFlag(char flag);
+    bool hasFlag(char flag) const;
 
     std::set<char> getFlags();
 
@@ -26,15 +26,13 @@ public:
 
 private:
     std::vector<std::string> args;
-
     std::vector<std::string> filepaths;
+    std::set<char> flags;
+    std::set<char> validFlags;
 
     void parseFlag(const std::string &flag);
 
     void parseFilepath(const std::string &filepath);
-
-    std::set<char> flags;
-    std::set<char> validFlags;
 };
 
 

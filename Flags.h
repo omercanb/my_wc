@@ -13,7 +13,7 @@ namespace Flags
     constexpr char CHAR = 'm';
     constexpr char LONGEST = 'L';
 
-    auto flags = {LINE, WORD, BYTE, CHAR, LONGEST};
+    inline auto VALID_FLAGS = {LINE, WORD, BYTE, CHAR, LONGEST};
 }
 
 

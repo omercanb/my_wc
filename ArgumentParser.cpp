@@ -17,7 +17,7 @@ void ArgumentParser::addFlag(char flag)
 }
 
 
-bool ArgumentParser::hasFlag(char flag)
+bool ArgumentParser::hasFlag(char flag) const
 {
     return flags.contains(flag);
 }
@@ -55,7 +55,7 @@ void ArgumentParser::parseFlag(const std::string &flag)
 {
     for (char c: flag.substr(1))
     {
-        if (flags.contains(c))
+        if (validFlags.contains(c))
         {
             flags.insert(c);
         }

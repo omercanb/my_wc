@@ -4,18 +4,13 @@
 
 
 #include <istream>
+#include <algorithm>
 
 #include "Counter.h"
+
+#include <sstream>
+
 #include "Flags.h"
-
-
-CountedItem::CountedItem(const std::set<char> &flags)
-{
-    for (char flag: flags)
-    {
-        counts[flag] = 0;
-    }
-}
 
 
 void CountedItem::add(const CountedItem &other)
@@ -27,7 +22,7 @@ void CountedItem::add(const CountedItem &other)
 }
 
 
-Counter::Counter(const std::set<char> &flags) : flags(flags), total(flags)
+Counter::Counter(const std::set<char> &flags) : flags(flags)
 {
     total.name = "total";
 }
@@ -48,72 +43,46 @@ CountedItem &Counter::getNewestItem()
     return items.back();
 }
 
-void Counter::countStream(std::istream &textStream)
+
+void Counter::countStream(std::istream &stream)
 {
-    items.push_back(CountedItem(flags));
+    items.push_back(CountedItem());
     CountedItem &item = items.back();
-    std::map<char, int> &counts = item.counts;
 
-    int currentLineLength = 0;
     bool readingAWord = false;
-    char c;
 
-    while (textStream.get(c))
+    std::string line;
+
+    while (std::getline(stream, line))
     {
-        counts[Flags::BYTE]++;
+        item.counts[Flags::LINE]++;
 
+        int lineLength;
         if (flags.contains(Flags::CHAR))
         {
-            if ((c & 0xc0) != 0x80) // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
-            {
-                counts[Flags::CHAR]++;
-                currentLineLength++;
-            }
-        } else
+            lineLength = std::count_if(line.begin(), line.end(),
+            [](char c) {return (c & 0xc0) != 0x80;}); // https://stackoverflow.com/questions/3586923/counting-unicode-characters-in-c
+            item.counts[Flags::CHAR] += lineLength + 1;
+        }
+        else
         {
-            currentLineLength++;
+            lineLength = line.size();
+            item.counts[Flags::BYTE] += lineLength + 1;
         }
 
-        if (c == '\n')
+        if (lineLength > item.counts[Flags::LONGEST])
         {
-            counts[Flags::LINE]++;
-
-            int realLength = currentLineLength - 1;
-            if (flags.contains(Flags::LONGEST) && (realLength > counts[Flags::LONGEST]))
-            {
-                counts[Flags::LONGEST] = realLength;
-            }
-
-            currentLineLength = 0;
+            item.counts[Flags::LONGEST] = lineLength;
         }
 
-
-        if (std::isspace(c))
-        {
-            if (readingAWord)
-            {
-                counts[Flags::WORD]++;
-                readingAWord = false;
-            }
-        } else
-        {
-            readingAWord = true;
-        }
+        std::istringstream lineStream(line);
+        const auto wordCount = std::distance(std::istream_iterator<std::string>(lineStream), {});
+        item.counts[Flags::WORD] += wordCount;
     }
 
-    if (readingAWord)
-    {
-        counts[Flags::WORD]++;
-    }
-
-
-    for (char flag: Flags::flags)
-    {
-        if (!flags.contains(flag))
-        {
-            counts.erase(flag);
-        }
-    }
+    std::erase_if(item.counts, [&](const auto &pair) {
+        return !flags.contains(pair.first);
+    });
 
     total.add(item);
 }

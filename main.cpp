@@ -13,11 +13,10 @@ int main(int argc, char *argv[])
     std::vector<std::string> args(argv, argv + argc);
     ArgumentParser parser(args);
 
-    parser.addFlag(Flags::LINE);
-    parser.addFlag(Flags::WORD);
-    parser.addFlag(Flags::BYTE);
-    parser.addFlag(Flags::CHAR);
-    parser.addFlag(Flags::LONGEST);
+    for (char flag : Flags::VALID_FLAGS)
+    {
+        parser.addFlag(flag);
+    }
 
     parser.parse();
 
@@ -31,19 +30,18 @@ int main(int argc, char *argv[])
 
     if (flags.empty())
     {
-        flags.insert(Flags::LINE);
-        flags.insert(Flags::WORD);
-        flags.insert(Flags::BYTE);
+        flags.insert({Flags::LINE, Flags::WORD, Flags::BYTE});
     }
 
-
     Counter counter(flags);
+
     if (filepaths.size() == 0)
     {
         counter.countStream(std::cin);
     }
     else
     {
+
         for (const std::string &filepath : filepaths)
         {
             std::ifstream fileStream(filepath);
@@ -53,7 +51,7 @@ int main(int argc, char *argv[])
     }
 
     std::vector<CountedItem> items = counter.getItems();
-    for (CountedItem item: items)
+    for (const CountedItem &item: items)
     {
         Printer::printCountedItem(item);
     }
