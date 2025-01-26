@@ -10,7 +10,9 @@
 #include <unordered_map>
 
 
-ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args) {}
+ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args)
+{
+}
 
 
 void ArgumentParser::addFlag(char flag)
@@ -45,8 +47,7 @@ void ArgumentParser::parse()
         if (argument[0] == '-')
         {
             parseFlag(argument);
-        }
-        else
+        } else
         {
             parseFilepath(argument);
         }
@@ -56,7 +57,7 @@ void ArgumentParser::parse()
 
 void ArgumentParser::parseFlag(const std::string &flag)
 {
-    for (char c : flag.substr(1))
+    for (char c: flag.substr(1))
     {
         if (flags.contains(c))
         {

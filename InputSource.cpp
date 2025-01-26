@@ -7,7 +7,9 @@
 #include <fstream>
 #include <iostream>
 
-FileInput::FileInput(std::string filepath) : filepath(filepath) {}
+FileInput::FileInput(std::string filepath) : filepath(filepath)
+{
+}
 
 FileInput::~FileInput()
 {
@@ -31,7 +33,9 @@ void FileInput::addSourceInfo(CountedItem &item)
     item.name = filepath;
 }
 
-MultipleFileInput::MultipleFileInput(const std::vector<std::string> filepaths) : filepaths(filepaths){}
+MultipleFileInput::MultipleFileInput(const std::vector<std::string> filepaths) : filepaths(filepaths)
+{
+}
 
 MultipleFileInput::~MultipleFileInput()
 {
@@ -55,7 +59,9 @@ void MultipleFileInput::addSourceInfo(CountedItem &item)
 }
 
 
-StdinInput::StdinInput() : InputSource() {}
+StdinInput::StdinInput() : InputSource()
+{
+}
 
 std::istream &StdinInput::getNextStream()
 {
@@ -70,5 +76,4 @@ bool StdinInput::hasNextStream()
 
 void StdinInput::addSourceInfo(CountedItem &item)
 {
-
 }

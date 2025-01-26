@@ -37,34 +37,32 @@ int main(int argc, char *argv[])
     }
 
 
-    InputSource* input;
+    InputSource *input;
     if (filepaths.size() == 0)
     {
         input = new StdinInput();
-    }
-    else if (filepaths.size() == 1)
+    } else if (filepaths.size() == 1)
     {
         input = new FileInput(filepaths.at(0));
-    }
-    else
+    } else
     {
         input = new MultipleFileInput(filepaths);
     }
 
     Counter counter(flags);
-    while(input->hasNextStream())
+    while (input->hasNextStream())
     {
         counter.countStream(input->getNextStream());
         input->addSourceInfo(counter.getNewestItem());
     }
-
     delete input;
 
     std::vector<CountedItem> items = counter.getItems();
-    for (CountedItem item : items)
+    for (CountedItem item: items)
     {
         Printer::printCountedItem(item);
     }
+
     if (items.size() > 1)
     {
         Printer::printCountedItem(counter.getTotal());

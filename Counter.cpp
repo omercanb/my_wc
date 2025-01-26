@@ -3,7 +3,6 @@
 //
 
 
-
 #include <istream>
 
 #include "Counter.h"
@@ -40,11 +39,9 @@
 // }
 
 
-
-
-CountedItem::CountedItem(const std::set<char>& flags)
+CountedItem::CountedItem(const std::set<char> &flags)
 {
-    for (char flag : flags)
+    for (char flag: flags)
     {
         counts[flag] = 0;
     }
@@ -53,14 +50,14 @@ CountedItem::CountedItem(const std::set<char>& flags)
 
 void CountedItem::add(const CountedItem &other)
 {
-    for (auto &[key, value] : counts)
+    for (auto &[key, value]: counts)
     {
         counts[key] += other.counts.at(key);
     }
 }
 
 
-Counter::Counter(const std::set<char>& flags) : flags(flags), total(flags)
+Counter::Counter(const std::set<char> &flags) : flags(flags), total(flags)
 {
     total.name = "total";
 }
@@ -76,7 +73,7 @@ CountedItem Counter::getTotal()
     return total;
 }
 
-CountedItem & Counter::getNewestItem()
+CountedItem &Counter::getNewestItem()
 {
     return items.back();
 }
@@ -102,8 +99,7 @@ void Counter::countStream(std::istream &textStream)
                 counts[Flags::CHAR]++;
                 currentLineLength++;
             }
-        }
-        else
+        } else
         {
             currentLineLength++;
         }
@@ -129,12 +125,10 @@ void Counter::countStream(std::istream &textStream)
                 counts[Flags::WORD]++;
                 readingAWord = false;
             }
-        }
-        else
+        } else
         {
             readingAWord = true;
         }
-
     }
 
     if (readingAWord)
@@ -142,7 +136,7 @@ void Counter::countStream(std::istream &textStream)
         counts[Flags::WORD]++;
     }
 
-    for (char flag : {Flags::LINE, Flags::LINE, Flags::WORD, Flags::BYTE, Flags::CHAR, Flags::LONGEST})
+    for (char flag: {Flags::LINE, Flags::LINE, Flags::WORD, Flags::BYTE, Flags::CHAR, Flags::LONGEST})
     {
         if (!flags.contains(flag))
         {

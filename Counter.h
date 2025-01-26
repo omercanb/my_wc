@@ -14,15 +14,18 @@
 class CountedItem
 {
 public:
-    CountedItem(const std::set<char>& flags);
+    CountedItem(const std::set<char> &flags);
+
     std::map<char, int> counts;
     std::optional<std::string> name;
+
     void add(const CountedItem &other);
 };
 
-class Counter {
+class Counter
+{
 public:
-    Counter(const std::set<char>& flags);
+    Counter(const std::set<char> &flags);
 
     std::vector<CountedItem> getItems();
 
@@ -39,7 +42,6 @@ private:
 
     CountedItem total;
 };
-
 
 
 #endif //COUNTER_H
