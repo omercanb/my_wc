@@ -6,7 +6,6 @@
 #define ARGUMENTPARSER_H
 
 #include "RunOptions.h"
-#include "ProgramInput.h"
 
 #include <map>
 
