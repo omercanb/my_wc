@@ -5,7 +5,6 @@
 #include "ArgumentParser.h"
 
 #include <fstream>
-#include <iostream>
 
 ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args)
 {

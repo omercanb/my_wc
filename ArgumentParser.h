@@ -6,6 +6,8 @@
 #define ARGUMENTPARSER_H
 
 #include <set>
+#include <vector>
+#include <string>
 
 class ArgumentParser
 {

@@ -8,36 +8,6 @@
 #include "Counter.h"
 #include "Flags.h"
 
-// Counts::Counts(std::set<char> flags)
-// {
-//     if (flags.contains(Flags::LINE))
-//     {
-//         lines = 0;
-//     }
-//     if (flags.contains(Flags::WORD))
-//     {
-//         words = 0;
-//     }
-//     if (flags.contains(Flags::BYTE))
-//     {
-//         bytes = 0;
-//     }
-//     if (flags.contains(Flags::CHAR))
-//     {
-//         chars = 0;
-//     }
-//     if (flags.contains(Flags::LONGEST))
-//     {
-//         longestLineLength = 0;
-//     }
-//
-//     if (chars.has_value() && bytes.has_value())
-//     {
-//         bytes.reset();
-//     }
-//
-// }
-
 
 CountedItem::CountedItem(const std::set<char> &flags)
 {
