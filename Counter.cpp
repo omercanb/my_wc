@@ -71,6 +71,11 @@ std::vector<CountedItem> Counter::getItems()
     return items;
 }
 
+CountedItem Counter::getTotal()
+{
+    return total;
+}
+
 CountedItem & Counter::getNewestItem()
 {
     return items.back();

@@ -15,4 +15,6 @@ add_executable(my_wc main.cpp
         Flags.h
         InputSource.cpp
         InputSource.h
+        Printer.cpp
+        Printer.h
 )

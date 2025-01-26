@@ -6,6 +6,8 @@
 #include "Counter.h"
 #include "Flags.h"
 #include "InputSource.h"
+#include "Printer.h"
+#include "ProgramOutput.h"
 
 
 int main(int argc, char *argv[])
@@ -48,13 +50,13 @@ int main(int argc, char *argv[])
 
     delete input;
 
-    std::cout << "Test";
-    // std::vector<std::string> args(argv, argv + argc);
-    //
-    // ArgumentParser parser(args);
-    // ProgramInput *programInput = parser.getProgramInput();
-    // ProgramOutput out = programInput->processInput();
-    // delete programInput;
-    // out.print();
-    // return 0;
+    std::vector<CountedItem> items = counter.getItems();
+    for (CountedItem item : items)
+    {
+        Printer::printCountedItem(item);
+    }
+    if (items.size() > 1)
+    {
+        Printer::printCountedItem(counter.getTotal());
+    }
 }

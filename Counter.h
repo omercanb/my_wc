@@ -25,6 +25,8 @@ public:
 
     std::vector<CountedItem> getItems();
 
+    CountedItem getTotal();
+
     void countStream(std::istream &textStream);
 
     CountedItem &getNewestItem();
