@@ -4,9 +4,6 @@
 
 #ifndef PRINTER_H
 #define PRINTER_H
-#include <string>
-
-#include <map>
 
 #include "Counter.h"
 

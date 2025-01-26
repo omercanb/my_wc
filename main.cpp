@@ -7,8 +7,6 @@
 #include "Flags.h"
 #include "InputSource.h"
 #include "Printer.h"
-#include "ProgramOutput.h"
-
 
 int main(int argc, char *argv[])
 {
@@ -24,6 +22,10 @@ int main(int argc, char *argv[])
     parser.parse();
 
     std::set<char> flags = parser.getFlags();
+    if (flags.contains(Flags::BYTE) && flags.contains(Flags::CHAR))
+    {
+        flags.erase(Flags::BYTE);
+    }
 
     std::vector<std::string> filepaths = parser.getFilepaths();
 

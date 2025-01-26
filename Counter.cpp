@@ -142,6 +142,13 @@ void Counter::countStream(std::istream &textStream)
         counts[Flags::WORD]++;
     }
 
+    for (char flag : {Flags::LINE, Flags::LINE, Flags::WORD, Flags::BYTE, Flags::CHAR, Flags::LONGEST})
+    {
+        if (!flags.contains(flag))
+        {
+            counts.erase(flag);
+        }
+    }
 
     total.add(item);
 }

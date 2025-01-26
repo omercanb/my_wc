@@ -3,36 +3,36 @@
 //
 
 #include "Printer.h"
+#include "Flags.h"
 
 #include <iostream>
-
-#include "Flags.h"
+#include <string>
+#include <map>
 
 namespace Printer
 {
     void printCountedItem(const CountedItem &item)
     {
         std::string format = "%8d ";
-        std::map<char, int> counts = item.counts;
-        if (counts.contains(Flags::LINE))
+        if (item.counts.contains(Flags::LINE))
         {
-            printf(format.c_str(), counts.at(Flags::LINE));
+            printf(format.c_str(), item.counts.at(Flags::LINE));
         }
-        if (counts.contains(Flags::WORD))
+        if (item.counts.contains(Flags::WORD))
         {
-            printf(format.c_str(), counts.at(Flags::WORD));
+            printf(format.c_str(), item.counts.at(Flags::WORD));
         }
-        if (counts.contains(Flags::BYTE))
+        if (item.counts.contains(Flags::BYTE))
         {
-            printf(format.c_str(), counts.at(Flags::BYTE));
+            printf(format.c_str(), item.counts.at(Flags::BYTE));
         }
-        if (counts.contains(Flags::CHAR))
+        if (item.counts.contains(Flags::CHAR))
         {
-            printf(format.c_str(), counts.at(Flags::CHAR));
+            printf(format.c_str(), item.counts.at(Flags::CHAR));
         }
-        if (counts.contains(Flags::LONGEST))
+        if (item.counts.contains(Flags::LONGEST))
         {
-            printf(format.c_str(), counts.at(Flags::LONGEST));
+            printf(format.c_str(), item.counts.at(Flags::LONGEST));
         }
         if (item.name)
         {
