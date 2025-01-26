@@ -6,9 +6,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <unistd.h>
-#include <unordered_map>
-
 
 ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args)
 {
@@ -76,52 +73,3 @@ void ArgumentParser::parseFilepath(const std::string &filepath)
         file.close();
     }
 }
-
-//
-// ProgramInput *ArgumentParser::getProgramInput()
-// {
-//     enum InputType {FILE, FILES, STDIN, PIPE};
-//
-//     InputType type = STDIN;
-//
-//     RunOptions options = getRunOptions();
-//
-//     if (!isatty(fileno(stdin)))
-//     {
-//         type = PIPE;
-//         return new StdinInput(options);
-//     }
-//
-//     std::vector<std::string> files;
-//     for (int i = args.size() - 1; i > 0; i--)
-//     {
-//         std::ifstream file(args[i]);
-//
-//         if (file.is_open())
-//         {
-//             files.push_back(args[i]);
-//             if (type == FILE)
-//             {
-//                 type = FILES;
-//             } else
-//             {
-//                 type = FILE;
-//             }
-//             file.close();
-//         } else
-//         {
-//             break;
-//         }
-//     }
-//
-//     if (files.size() == 1)
-//     {
-//         return (new SingleFileInput(options, files[0]));
-//     } else if (files.size() > 1)
-//     {
-//         return (new MultipleFileInput(options, files));
-//     }
-//
-//     type = STDIN;
-//     return new StdinInput(options);
-// }

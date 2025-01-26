@@ -12,10 +12,6 @@ class ArgumentParser
 public:
     explicit ArgumentParser(const std::vector<std::string> &args);
 
-    // RunOptions getRunOptions();
-    //
-    // ProgramInput *getProgramInput();
-
     void addFlag(char flag);
 
     bool hasFlag(char flag);
