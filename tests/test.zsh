@@ -3,6 +3,7 @@
 files=("full.txt" "locale.txt" "whitespace.txt")
 script_dir="$(dirname "$0")"
 
+# shellcheck disable=SC2068
 for file in ${files[@]}; do
     full_path="$script_dir/$file"
 

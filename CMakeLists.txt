@@ -12,4 +12,7 @@ add_executable(my_wc main.cpp
         ProgramInput.h
         ProgramOutput.cpp
         ProgramOutput.h
+        Counter.cpp
+        Counter.h
+        Flags.h
 )

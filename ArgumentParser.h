@@ -8,7 +8,7 @@
 #include "RunOptions.h"
 #include "ProgramInput.h"
 
-#include <string>
+#include <map>
 
 
 class ArgumentParser
@@ -16,13 +16,31 @@ class ArgumentParser
 public:
     explicit ArgumentParser(const std::vector<std::string> &args);
 
-    RunOptions getRunOptions();
+    // RunOptions getRunOptions();
+    //
+    // ProgramInput *getProgramInput();
 
-    ProgramInput *getProgramInput();
+    void addFlag(char flag);
+
+    bool hasFlag(char flag);
+
+    std::set<char> getFlags();
+
+    std::vector<std::string> getFilepaths();
+
+    void parse();
 
 private:
     std::vector<std::string> args;
-    std::set<RunOptions::Output> parseFlag(const std::string& flag);
+
+    std::vector<std::string> filepaths;
+
+    void parseFlag(const std::string &flag);
+
+    void parseFilepath(const std::string &filepath);
+
+    std::set<char> flags;
+    std::set<char> validFlags;
 };
 
 
