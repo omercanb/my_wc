@@ -15,7 +15,7 @@ ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args
 
 void ArgumentParser::addFlag(char flag)
 {
-    flags.insert(flag);
+    validFlags.insert(flag);
 }
 
 
@@ -35,35 +35,6 @@ std::vector<std::string> ArgumentParser::getFilepaths()
 {
     return filepaths;
 }
-
-
-// RunOptions ArgumentParser::getRunOptions()
-// {
-//     RunOptions runOptions;
-//
-//     bool runOptionsIsEmpty = true;
-//     for (int i = 1; i < args.size() - 1; i++)
-//     {
-//         std::string& arg = args[i];
-//         if (arg[0] == '-')
-//         {
-//             std::set<RunOptions::Output> flags = parseFlag(arg);
-//             for (RunOptions::Output flag : flags)
-//             {
-//                 runOptions.addOutputOption(flag);
-//                 runOptionsIsEmpty = false;
-//             }
-//         }
-//     }
-//
-//     if (runOptionsIsEmpty)
-//     {
-//         runOptions.addOutputOption(RunOptions::LINE);
-//         runOptions.addOutputOption(RunOptions::WORD);
-//         runOptions.addOutputOption(RunOptions::BYTE);
-//     }
-//     return runOptions;
-// }
 
 
 void ArgumentParser::parse()

@@ -5,10 +5,7 @@
 #ifndef ARGUMENTPARSER_H
 #define ARGUMENTPARSER_H
 
-#include "RunOptions.h"
-
-#include <map>
-
+#include <set>
 
 class ArgumentParser
 {
