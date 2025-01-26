@@ -5,77 +5,34 @@
 #ifndef INPUTSOURCE_H
 #define INPUTSOURCE_H
 #include <istream>
+#include <fstream>
 
 #include "Counter.h"
 
-
-class InputSource
+namespace InputSource
 {
-public:
-    virtual std::istream &getNextStream() = 0;
+    class File
+    {
+    public:
+        File(std::string filepath);
 
-    virtual bool hasNextStream() = 0;
+        std::string getFilepath();
+        std::ifstream &getFileStream();
+    private:
+        std::string filepath;
+        std::ifstream stream;
+    };
 
-    virtual void addSourceInfo(CountedItem &item) = 0;
-
-    virtual ~InputSource() = default;
-};
-
-
-class FileInput : public InputSource
-{
-private:
-    ~FileInput();
-
-    std::istream *currentStream = nullptr;
-    bool readInput = false;
-    std::string filepath;
-
-public:
-    explicit FileInput(std::string filepath);
-
-    std::istream &getNextStream() override;
-
-    void addSourceInfo(CountedItem &item) override;
-
-    bool hasNextStream() override;
-};
-
-
-class MultipleFileInput : public InputSource
-{
-private:
-    ~MultipleFileInput();
-
-    std::istream *currentStream = nullptr;
-    std::vector<std::string> filepaths;
-    int idx = 0;
-
-public:
-    explicit MultipleFileInput(const std::vector<std::string> filepaths);
-
-    std::istream &getNextStream() override;
-
-    void addSourceInfo(CountedItem &item) override;
-
-    bool hasNextStream() override;
-};
-
-
-class StdinInput : public InputSource
-{
-private:
-    bool readInput = false;
-
-public:
-    explicit StdinInput();
-
-    std::istream &getNextStream() override;
-
-    void addSourceInfo(CountedItem &item) override;
-
-    bool hasNextStream() override;
-};
-
+    class FileList
+    {
+    public:
+        FileList(std::vector<std::string> filepaths);
+        bool hasNextInput();
+        File &getNextInput();
+    private:
+        int idx = 0;
+        std::vector<File> inputs;
+    };
+}
 
 #endif //INPUTSOURCE_H

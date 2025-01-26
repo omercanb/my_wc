@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <istream>
 
 #include "ArgumentParser.h"
 #include "Counter.h"
@@ -37,25 +38,20 @@ int main(int argc, char *argv[])
     }
 
 
-    InputSource *input;
+    Counter counter(flags);
     if (filepaths.size() == 0)
     {
-        input = new StdinInput();
-    } else if (filepaths.size() == 1)
-    {
-        input = new FileInput(filepaths.at(0));
-    } else
-    {
-        input = new MultipleFileInput(filepaths);
+        counter.countStream(std::cin);
     }
-
-    Counter counter(flags);
-    while (input->hasNextStream())
+    else
     {
-        counter.countStream(input->getNextStream());
-        input->addSourceInfo(counter.getNewestItem());
+        for (const std::string &filepath : filepaths)
+        {
+            std::ifstream fileStream(filepath);
+            counter.countStream(fileStream);
+            counter.getNewestItem().name = filepath;
+        }
     }
-    delete input;
 
     std::vector<CountedItem> items = counter.getItems();
     for (CountedItem item: items)

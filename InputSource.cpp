@@ -7,73 +7,36 @@
 #include <fstream>
 #include <iostream>
 
-FileInput::FileInput(std::string filepath) : filepath(filepath)
+namespace InputSource
 {
-}
 
-FileInput::~FileInput()
-{
-    delete currentStream;
-}
+    File::File(std::string filepath) : filepath(filepath), stream(filepath) {}
 
-std::istream &FileInput::getNextStream()
-{
-    currentStream = new std::ifstream(filepath);
-    readInput = true;
-    return *currentStream;
-}
+    std::string File::getFilepath()
+    {
+        return filepath;
+    }
 
-bool FileInput::hasNextStream()
-{
-    return !readInput;
-}
+    std::ifstream &File::getFileStream()
+    {
+        return stream;
+    }
 
-void FileInput::addSourceInfo(CountedItem &item)
-{
-    item.name = filepath;
-}
+    FileList::FileList(std::vector<std::string> filepaths)
+    {
+        for (const auto& filepath : filepaths)
+        {
+            inputs.push_back(File(filepath));
+        }
+    }
 
-MultipleFileInput::MultipleFileInput(const std::vector<std::string> filepaths) : filepaths(filepaths)
-{
-}
+    bool FileList::hasNextInput()
+    {
+        return idx < inputs.size();
+    }
 
-MultipleFileInput::~MultipleFileInput()
-{
-    delete currentStream;
-}
-
-std::istream &MultipleFileInput::getNextStream()
-{
-    currentStream = new std::ifstream(filepaths[idx++]);
-    return *currentStream;
-}
-
-bool MultipleFileInput::hasNextStream()
-{
-    return idx < filepaths.size();
-}
-
-void MultipleFileInput::addSourceInfo(CountedItem &item)
-{
-    item.name = filepaths[idx - 1];
-}
-
-
-StdinInput::StdinInput() : InputSource()
-{
-}
-
-std::istream &StdinInput::getNextStream()
-{
-    readInput = true;
-    return std::cin;
-}
-
-bool StdinInput::hasNextStream()
-{
-    return !readInput;
-}
-
-void StdinInput::addSourceInfo(CountedItem &item)
-{
-}
+    File &FileList::getNextInput()
+    {
+        return inputs[idx++];
+    }
+};
