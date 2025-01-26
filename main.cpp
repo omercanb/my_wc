@@ -22,12 +22,20 @@ int main(int argc, char *argv[])
     parser.parse();
 
     std::set<char> flags = parser.getFlags();
+    std::vector<std::string> filepaths = parser.getFilepaths();
+
     if (flags.contains(Flags::BYTE) && flags.contains(Flags::CHAR))
     {
         flags.erase(Flags::BYTE);
     }
 
-    std::vector<std::string> filepaths = parser.getFilepaths();
+    if (flags.empty())
+    {
+        flags.insert(Flags::LINE);
+        flags.insert(Flags::WORD);
+        flags.insert(Flags::BYTE);
+    }
+
 
     InputSource* input;
     if (filepaths.size() == 0)
