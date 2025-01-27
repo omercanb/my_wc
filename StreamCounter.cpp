@@ -31,6 +31,11 @@ void StreamCounter::process(std::istream &stream)
     processedStreamStats.emplace_back();
     std::map<char, int> &stats = processedStreamStats.back();
 
+    for (char flag : flags)
+    {
+        stats[flag];
+    }
+
     std::string line;
     while (std::getline(stream, line))
     {
@@ -40,6 +45,7 @@ void StreamCounter::process(std::istream &stream)
     std::erase_if(stats, [&](const auto &pair) {
         return !flags.contains(pair.first);
     });
+
 
     for (const auto &[key, value] : stats)
     {
