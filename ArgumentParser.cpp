@@ -6,6 +6,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <stdexcept>
 
 ArgumentParser::ArgumentParser(int argc, char *argv[]) : args(argv, argv + argc) {}
 
@@ -25,8 +26,6 @@ std::set<char> ArgumentParser::getUsedFlags() const
 {
     return usedFlags;
 }
-
-
 
 std::vector<std::string> ArgumentParser::getValidInputFilepaths() const
 {
@@ -61,6 +60,10 @@ void ArgumentParser::parseFlag(const std::string &flag)
         if (validFlags.contains(c))
         {
             usedFlags.insert(c);
+        }
+        else
+        {
+            throw std::runtime_error("illegal option -- " + std::string{c});
         }
     }
 }
