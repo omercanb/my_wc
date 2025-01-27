@@ -6,10 +6,7 @@
 
 #include <fstream>
 
-ArgumentParser::ArgumentParser(const std::vector<std::string> &args) : args(args)
-{
-}
-
+ArgumentParser::ArgumentParser(int argc, char *argv[]) : args(argv, argv + argc) {}
 
 void ArgumentParser::addFlag(char flag)
 {

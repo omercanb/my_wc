@@ -11,7 +11,7 @@ namespace StatsPrinter
 {
     void print(const std::map<char, int> &stats);
     void printWithName(const std::map<char, int> &stats, const std::string &name);
-    void _printWithoutNewline(const std::map<char, int> &stats);
+    static void _printWithoutNewline(const std::map<char, int> &stats);
 }
 
 

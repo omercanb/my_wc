@@ -12,7 +12,7 @@
 class ArgumentParser
 {
 public:
-    explicit ArgumentParser(const std::vector<std::string> &args);
+    ArgumentParser(int argc, char *argv[]);
 
     void addFlag(char flag);
 

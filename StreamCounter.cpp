@@ -7,8 +7,11 @@
 #include <algorithm>
 #include <sstream>
 
-#include "Counter.h"
+#include "StreamCounter.h"
 #include "Flags.h"
+
+
+StreamCounter::StreamCounter(const std::set<char> &flags) : flags(flags) {}
 
 
 std::map<char, int> StreamCounter::getTotalStats()
@@ -17,16 +20,16 @@ std::map<char, int> StreamCounter::getTotalStats()
 }
 
 
-std::vector<std::map<char, int>> StreamCounter::getAllStats()
+std::vector<std::map<char, int>> StreamCounter::getProcessedStreamStats()
 {
-    return allStats;
+    return processedStreamStats;
 }
 
 
-void StreamCounter::processStream(std::istream &stream)
+void StreamCounter::process(std::istream &stream)
 {
-    allStats.emplace_back();
-    std::map<char, int> &stats = allStats.back();
+    processedStreamStats.emplace_back();
+    std::map<char, int> &stats = processedStreamStats.back();
 
     std::string line;
     while (std::getline(stream, line))

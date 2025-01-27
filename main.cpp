@@ -8,21 +8,51 @@
 #include "Flags.h"
 #include "StatsPrinter.h"
 
+void addAllValidFlags(ArgumentParser &parser);
+void configureFlagsForProcessing(std::set<char> &flags);
+void processInputFiles(StreamCounter &counter, const std::vector<std::string> &filepaths);
+void processStdinInput(StreamCounter &counter);
+void printStatsForFiles(StreamCounter &counter, const std::vector<std::string> &filepaths);
+
 int main(int argc, char *argv[])
 {
-    std::vector<std::string> args(argv, argv + argc);
-    ArgumentParser parser(args);
+    ArgumentParser parser(argc, argv);
+    addAllValidFlags(parser);
+    parser.parse();
 
-    for (char flag : Flags::VALID_FLAGS)
+    std::set<char> flagsUsed = parser.getFlags();
+    std::vector<std::string> inputFilepaths = parser.getFilepaths();
+
+    configureFlagsForProcessing(flagsUsed);
+
+    bool useFilesAsInput = inputFilepaths.size() >= 1;
+
+    StreamCounter counter(flagsUsed);
+    if (useFilesAsInput)
+    {
+        processInputFiles(counter, inputFilepaths);
+        printStatsForFiles(counter, inputFilepaths);
+    }
+    else
+    {
+        processStdinInput(counter);
+        auto stats = counter.getProcessedStreamStats()[0];
+        StatsPrinter::print(stats);
+    }
+}
+
+
+void addAllValidFlags(ArgumentParser &parser)
+{
+    for (const char flag : Flags::VALID_FLAGS)
     {
         parser.addFlag(flag);
     }
+}
 
-    parser.parse();
 
-    std::set<char> flags = parser.getFlags();
-    std::vector<std::string> filepaths = parser.getFilepaths();
-
+void configureFlagsForProcessing(std::set<char> &flags)
+{
     if (flags.contains(Flags::BYTE) && flags.contains(Flags::CHAR))
     {
         flags.erase(Flags::BYTE);
@@ -32,37 +62,35 @@ int main(int argc, char *argv[])
     {
         flags.insert({Flags::LINE, Flags::WORD, Flags::BYTE});
     }
+}
 
-    bool usesFileInput = filepaths.size() >= 1;
 
-    StreamCounter counter(flags);
-    if (!usesFileInput)
+void processInputFiles(StreamCounter &counter, const std::vector<std::string> &filepaths)
+{
+    for (const std::string &filepath : filepaths)
     {
-        counter.process(std::cin);
+        std::ifstream fileStream(filepath);
+        counter.process(fileStream);
     }
-    else
+}
+
+
+void processStdinInput(StreamCounter &counter)
+{
+    counter.process(std::cin);
+}
+
+
+void printStatsForFiles(StreamCounter &counter, const std::vector<std::string> &filepaths)
+{
+    const auto &fileStats = counter.getProcessedStreamStats();
+    for (int i = 0; i < fileStats.size(); i++)
     {
-        for (const std::string &filepath : filepaths)
-        {
-            std::ifstream fileStream(filepath);
-            counter.process(fileStream);
-        }
+        StatsPrinter::printWithName(fileStats[i], filepaths[i]);
     }
 
-    std::vector<std::map<char, int>> allStats = counter.getProcessedStreamStats();
-    if (!usesFileInput)
+    if (fileStats.size() > 1)
     {
-        StatsPrinter::print(allStats[0]);
-    }
-    else
-    {
-        for (int i = 0; i < allStats.size(); i++)
-        {
-            StatsPrinter::printWithName(allStats[i], filepaths[i]);
-        }
-        if (allStats.size() > 1)
-        {
-            StatsPrinter::printWithName(counter.getTotalStats(), "total");
-        }
+        StatsPrinter::printWithName(counter.getTotalStats(), "total");
     }
 }
