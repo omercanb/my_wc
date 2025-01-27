@@ -5,6 +5,7 @@
 #include "ArgumentParser.h"
 
 #include <fstream>
+#include <iostream>
 
 ArgumentParser::ArgumentParser(int argc, char *argv[]) : args(argv, argv + argc) {}
 
@@ -20,17 +21,22 @@ bool ArgumentParser::isFlagUsed(char flag) const
 }
 
 
-std::set<char> ArgumentParser::getFlags() const
+std::set<char> ArgumentParser::getUsedFlags() const
 {
     return usedFlags;
 }
 
 
-std::vector<std::string> ArgumentParser::getFilepaths() const
+
+std::vector<std::string> ArgumentParser::getValidInputFilepaths() const
 {
-    return filepaths;
+    return validInputFilepaths;
 }
 
+std::vector<std::string> ArgumentParser::getInputFilepaths() const
+{
+    return inputFilepaths;
+}
 
 void ArgumentParser::parse()
 {
@@ -62,10 +68,16 @@ void ArgumentParser::parseFlag(const std::string &flag)
 
 void ArgumentParser::parseFilepath(const std::string &filepath)
 {
+    inputFilepaths.push_back(filepath);
+
     std::ifstream file(filepath);
     if (file.is_open())
     {
-        filepaths.push_back(filepath);
+        validInputFilepaths.push_back(filepath);
         file.close();
+    }
+    else
+    {
+        std::cerr << "my_wc: " << filepath << ": open: No such file or directory\n";
     }
 }

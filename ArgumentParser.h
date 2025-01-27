@@ -18,15 +18,18 @@ public:
 
     bool isFlagUsed(char flag) const;
 
-    std::set<char> getFlags() const;
+    std::set<char> getUsedFlags() const;
 
-    std::vector<std::string> getFilepaths() const;
+    std::vector<std::string> getValidInputFilepaths() const;
+    std::vector<std::string> getInputFilepaths() const;
+
 
     void parse();
 
 private:
     std::vector<std::string> args;
-    std::vector<std::string> filepaths;
+    std::vector<std::string> inputFilepaths;
+    std::vector<std::string> validInputFilepaths;
     std::set<char> usedFlags;
     std::set<char> validFlags;
 

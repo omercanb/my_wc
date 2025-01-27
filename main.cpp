@@ -20,12 +20,13 @@ int main(int argc, char *argv[])
     addAllValidFlags(parser);
     parser.parse();
 
-    std::set<char> flagsUsed = parser.getFlags();
-    std::vector<std::string> inputFilepaths = parser.getFilepaths();
+    std::set<char> flagsUsed = parser.getUsedFlags();
+    std::vector<std::string> inputFilepaths = parser.getValidInputFilepaths();
 
     configureFlagsForProcessing(flagsUsed);
 
-    bool useFilesAsInput = inputFilepaths.size() >= 1;
+
+    bool useFilesAsInput = parser.getInputFilepaths().size() >= 1;
 
     StreamCounter counter(flagsUsed);
     if (useFilesAsInput)
