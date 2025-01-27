@@ -2,29 +2,29 @@
 // Created by Ömer Can Baykara on 26.01.2025.
 //
 
-#include "Printer.h"
+#include "StatsPrinter.h"
 #include "Flags.h"
 
 #include <iostream>
 #include <string>
 #include <map>
 
-namespace Printer
+namespace StatsPrinter
 {
-    void printStats(const std::map<char, int> &stats)
+    void print(const std::map<char, int> &stats)
     {
-        _printStatsWithoutNewline(stats);
+        _printWithoutNewline(stats);
         std::cout << '\n';
     }
 
-    void printStats(const std::map<char, int> &stats, const std::string &name)
+    void printWithName(const std::map<char, int> &stats, const std::string &name)
     {
-        _printStatsWithoutNewline(stats);
+        _printWithoutNewline(stats);
         std::cout << name << '\n';
     }
 
 
-    void _printStatsWithoutNewline(const std::map<char, int> &stats)
+    void _printWithoutNewline(const std::map<char, int> &stats)
     {
         std::string format = "%8d ";
         if (stats.contains(Flags::LINE))

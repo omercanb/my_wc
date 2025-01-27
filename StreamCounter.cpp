@@ -11,19 +11,19 @@
 #include "Flags.h"
 
 
-std::map<char, int> Counter::getTotalStats()
+std::map<char, int> StreamCounter::getTotalStats()
 {
     return totalStats;
 }
 
 
-std::vector<std::map<char, int>> Counter::getAllStats()
+std::vector<std::map<char, int>> StreamCounter::getAllStats()
 {
     return allStats;
 }
 
 
-void Counter::processStream(std::istream &stream)
+void StreamCounter::processStream(std::istream &stream)
 {
     allStats.emplace_back();
     std::map<char, int> &stats = allStats.back();
@@ -45,7 +45,7 @@ void Counter::processStream(std::istream &stream)
 }
 
 
-void Counter::processLine(const std::string &line, std::map<char, int> &stats)
+void StreamCounter::processLine(const std::string &line, std::map<char, int> &stats)
 {
     stats[Flags::LINE]++;
 

@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 20)
 add_executable(my_wc main.cpp
         ArgumentParser.cpp
         ArgumentParser.h
-        Counter.cpp
-        Counter.h
+        StreamCounter.cpp
+        StreamCounter.h
         Flags.h
-        Printer.cpp
-        Printer.h
+        StatsPrinter.cpp
+        StatsPrinter.h
 )

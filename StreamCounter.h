@@ -7,26 +7,23 @@
 
 #include <set>
 #include <map>
-#include <optional>
 #include <vector>
 #include <string>
 
-class Counter
+class StreamCounter
 {
 public:
-    Counter(const std::set<char> &flags);
+    StreamCounter(const std::set<char> &flags);
 
     std::map<char, int> getTotalStats();
-    std::vector<std::map<char, int>> getAllStats();
+    std::vector<std::map<char, int>> getProcessedStreamStats();
 
-    void countStream(std::istream &textStream);
-
-    void processStream(std::istream &stream);
+    void process(std::istream &stream);
 
 private:
     std::set<char> flags;
 
-    std::vector<std::map<char, int>> allStats;
+    std::vector<std::map<char, int>> processedStreamStats;
     std::map<char, int> totalStats;
 
     void processLine(const std::string &line, std::map<char, int> &stats);

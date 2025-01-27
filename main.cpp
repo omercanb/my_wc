@@ -4,9 +4,9 @@
 #include <istream>
 
 #include "ArgumentParser.h"
-#include "Counter.h"
+#include "StreamCounter.h"
 #include "Flags.h"
-#include "Printer.h"
+#include "StatsPrinter.h"
 
 int main(int argc, char *argv[])
 {
@@ -35,34 +35,34 @@ int main(int argc, char *argv[])
 
     bool usesFileInput = filepaths.size() >= 1;
 
-    Counter counter(flags);
+    StreamCounter counter(flags);
     if (!usesFileInput)
     {
-        counter.processStream(std::cin);
+        counter.process(std::cin);
     }
     else
     {
         for (const std::string &filepath : filepaths)
         {
             std::ifstream fileStream(filepath);
-            counter.processStream(fileStream);
+            counter.process(fileStream);
         }
     }
 
-    std::vector<std::map<char, int>> allStats = counter.getAllStats();
+    std::vector<std::map<char, int>> allStats = counter.getProcessedStreamStats();
     if (!usesFileInput)
     {
-        Printer::printStats(allStats[0]);
+        StatsPrinter::print(allStats[0]);
     }
     else
     {
         for (int i = 0; i < allStats.size(); i++)
         {
-            Printer::printStats(allStats[i], filepaths[i]);
+            StatsPrinter::printWithName(allStats[i], filepaths[i]);
         }
         if (allStats.size() > 1)
         {
-            Printer::printStats(counter.getTotalStats(), "total");
+            StatsPrinter::printWithName(counter.getTotalStats(), "total");
         }
     }
 }
