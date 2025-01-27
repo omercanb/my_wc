@@ -33,30 +33,36 @@ int main(int argc, char *argv[])
         flags.insert({Flags::LINE, Flags::WORD, Flags::BYTE});
     }
 
-    Counter counter(flags);
+    bool usesFileInput = filepaths.size() >= 1;
 
-    if (filepaths.size() == 0)
+    Counter counter(flags);
+    if (!usesFileInput)
     {
-        counter.countStream(std::cin);
+        counter.processStream(std::cin);
     }
     else
     {
         for (const std::string &filepath : filepaths)
         {
             std::ifstream fileStream(filepath);
-            counter.countStream(fileStream);
-            counter.getNewestItem().name = filepath;
+            counter.processStream(fileStream);
         }
     }
 
-    std::vector<CountedItem> items = counter.getItems();
-    for (const CountedItem &item: items)
+    std::vector<std::map<char, int>> allStats = counter.getAllStats();
+    if (!usesFileInput)
     {
-        Printer::printCountedItem(item);
+        Printer::printStats(allStats[0]);
     }
-
-    if (items.size() > 1)
+    else
     {
-        Printer::printCountedItem(counter.getTotal());
+        for (int i = 0; i < allStats.size(); i++)
+        {
+            Printer::printStats(allStats[i], filepaths[i]);
+        }
+        if (allStats.size() > 1)
+        {
+            Printer::printStats(counter.getTotalStats(), "total");
+        }
     }
 }

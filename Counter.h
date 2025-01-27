@@ -11,35 +11,25 @@
 #include <vector>
 #include <string>
 
-struct  CountedItem
-{
-    std::map<char, int> counts;
-    std::optional<std::string> name;
-
-    void add(const CountedItem &other);
-};
-
 class Counter
 {
 public:
     Counter(const std::set<char> &flags);
 
-    std::vector<CountedItem> getItems();
-
-    CountedItem getTotal();
+    std::map<char, int> getTotalStats();
+    std::vector<std::map<char, int>> getAllStats();
 
     void countStream(std::istream &textStream);
 
-    CountedItem &getNewestItem();
+    void processStream(std::istream &stream);
 
 private:
     std::set<char> flags;
 
-    std::vector<CountedItem> items;
+    std::vector<std::map<char, int>> allStats;
+    std::map<char, int> totalStats;
 
-    CountedItem total;
-
-    void countLine(const std::string& line, CountedItem& item);
+    void processLine(const std::string &line, std::map<char, int> &stats);
 };
 
 

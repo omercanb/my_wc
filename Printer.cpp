@@ -11,33 +11,41 @@
 
 namespace Printer
 {
-    void printCountedItem(const CountedItem &item)
+    void printStats(const std::map<char, int> &stats)
+    {
+        _printStatsWithoutNewline(stats);
+        std::cout << '\n';
+    }
+
+    void printStats(const std::map<char, int> &stats, const std::string &name)
+    {
+        _printStatsWithoutNewline(stats);
+        std::cout << name << '\n';
+    }
+
+
+    void _printStatsWithoutNewline(const std::map<char, int> &stats)
     {
         std::string format = "%8d ";
-        if (item.counts.contains(Flags::LINE))
+        if (stats.contains(Flags::LINE))
         {
-            printf(format.c_str(), item.counts.at(Flags::LINE));
+            printf(format.c_str(), stats.at(Flags::LINE));
         }
-        if (item.counts.contains(Flags::WORD))
+        if (stats.contains(Flags::WORD))
         {
-            printf(format.c_str(), item.counts.at(Flags::WORD));
+            printf(format.c_str(), stats.at(Flags::WORD));
         }
-        if (item.counts.contains(Flags::BYTE))
+        if (stats.contains(Flags::BYTE))
         {
-            printf(format.c_str(), item.counts.at(Flags::BYTE));
+            printf(format.c_str(), stats.at(Flags::BYTE));
         }
-        if (item.counts.contains(Flags::CHAR))
+        if (stats.contains(Flags::CHAR))
         {
-            printf(format.c_str(), item.counts.at(Flags::CHAR));
+            printf(format.c_str(), stats.at(Flags::CHAR));
         }
-        if (item.counts.contains(Flags::LONGEST))
+        if (stats.contains(Flags::LONGEST))
         {
-            printf(format.c_str(), item.counts.at(Flags::LONGEST));
+            printf(format.c_str(), stats.at(Flags::LONGEST));
         }
-        if (item.name)
-        {
-            printf(item.name.value().c_str());
-        }
-        std::cout << std::endl;
     }
 }

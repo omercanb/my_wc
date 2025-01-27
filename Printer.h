@@ -5,11 +5,13 @@
 #ifndef PRINTER_H
 #define PRINTER_H
 
-#include "Counter.h"
+#include <map>
 
 namespace Printer
 {
-    void printCountedItem(const CountedItem &item);
+    void printStats(const std::map<char, int> &stats);
+    void printStats(const std::map<char, int> &stats, const std::string &name);
+    void _printStatsWithoutNewline(const std::map<char, int> &stats);
 }
 
 
