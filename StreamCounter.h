@@ -20,13 +20,17 @@ public:
 
     void process(std::istream &stream);
 
+    void addToTotal(const std::map<char, int> &stats);
+
 private:
     std::set<char> flags;
 
     std::vector<std::map<char, int>> processedStreamStats;
     std::map<char, int> totalStats;
 
-    void processLine(const std::string &line, std::map<char, int> &stats);
+    void accumulateStats(std::istream &stream, std::map<char, int> &stats) const;
+    void cleanStats(std::map<char, int> &stats) const;
+
 };
 
 
