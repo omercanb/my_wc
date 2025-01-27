@@ -14,20 +14,20 @@ class ArgumentParser
 public:
     ArgumentParser(int argc, char *argv[]);
 
-    void addFlag(char flag);
+    void addValidFlag(char flag);
 
-    bool hasFlag(char flag) const;
+    bool isFlagUsed(char flag) const;
 
-    std::set<char> getFlags();
+    std::set<char> getFlags() const;
 
-    std::vector<std::string> getFilepaths();
+    std::vector<std::string> getFilepaths() const;
 
     void parse();
 
 private:
     std::vector<std::string> args;
     std::vector<std::string> filepaths;
-    std::set<char> flags;
+    std::set<char> usedFlags;
     std::set<char> validFlags;
 
     void parseFlag(const std::string &flag);

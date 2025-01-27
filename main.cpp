@@ -12,7 +12,7 @@ void addAllValidFlags(ArgumentParser &parser);
 void configureFlagsForProcessing(std::set<char> &flags);
 void processInputFiles(StreamCounter &counter, const std::vector<std::string> &filepaths);
 void processStdinInput(StreamCounter &counter);
-void printStatsForFiles(StreamCounter &counter, const std::vector<std::string> &filepaths);
+void printStatsForFiles(const StreamCounter &counter, const std::vector<std::string> &filepaths);
 
 int main(int argc, char *argv[])
 {
@@ -46,7 +46,7 @@ void addAllValidFlags(ArgumentParser &parser)
 {
     for (const char flag : Flags::VALID_FLAGS)
     {
-        parser.addFlag(flag);
+        parser.addValidFlag(flag);
     }
 }
 
@@ -81,7 +81,7 @@ void processStdinInput(StreamCounter &counter)
 }
 
 
-void printStatsForFiles(StreamCounter &counter, const std::vector<std::string> &filepaths)
+void printStatsForFiles(const StreamCounter &counter, const std::vector<std::string> &filepaths)
 {
     const auto &fileStats = counter.getProcessedStreamStats();
     for (int i = 0; i < fileStats.size(); i++)

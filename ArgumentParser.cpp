@@ -8,25 +8,25 @@
 
 ArgumentParser::ArgumentParser(int argc, char *argv[]) : args(argv, argv + argc) {}
 
-void ArgumentParser::addFlag(char flag)
+void ArgumentParser::addValidFlag(char flag)
 {
     validFlags.insert(flag);
 }
 
 
-bool ArgumentParser::hasFlag(char flag) const
+bool ArgumentParser::isFlagUsed(char flag) const
 {
-    return flags.contains(flag);
+    return usedFlags.contains(flag);
 }
 
 
-std::set<char> ArgumentParser::getFlags()
+std::set<char> ArgumentParser::getFlags() const
 {
-    return flags;
+    return usedFlags;
 }
 
 
-std::vector<std::string> ArgumentParser::getFilepaths()
+std::vector<std::string> ArgumentParser::getFilepaths() const
 {
     return filepaths;
 }
@@ -54,7 +54,7 @@ void ArgumentParser::parseFlag(const std::string &flag)
     {
         if (validFlags.contains(c))
         {
-            flags.insert(c);
+            usedFlags.insert(c);
         }
     }
 }

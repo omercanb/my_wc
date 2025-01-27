@@ -15,8 +15,8 @@ class StreamCounter
 public:
     StreamCounter(const std::set<char> &flags);
 
-    std::map<char, int> getTotalStats();
-    std::vector<std::map<char, int>> getProcessedStreamStats();
+    std::map<char, int> getTotalStats() const;
+    std::vector<std::map<char, int>> getProcessedStreamStats() const;
 
     void process(std::istream &stream);
 

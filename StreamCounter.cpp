@@ -14,13 +14,13 @@
 StreamCounter::StreamCounter(const std::set<char> &flags) : flags(flags) {}
 
 
-std::map<char, int> StreamCounter::getTotalStats()
+std::map<char, int> StreamCounter::getTotalStats() const
 {
     return totalStats;
 }
 
 
-std::vector<std::map<char, int>> StreamCounter::getProcessedStreamStats()
+std::vector<std::map<char, int>> StreamCounter::getProcessedStreamStats() const
 {
     return processedStreamStats;
 }
